@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farrukh Mumtaz — AI Developer & ML Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0d0f14;
+      --card-bg: rgba(14, 18, 24, 0.2);
+      --card-bg-hover: rgba(22, 28, 38, 0.35);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-hover: rgba(255, 255, 255, 0.2);
+      --text-white: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.75);
+      --text-dim: rgba(255, 255, 255, 0.45);
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-serif: 'Cinzel', serif;
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+    }
+
+    /* Fixed Canvas Background */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Dark Slate Overlay */
+    .bg-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 2;
+      pointer-events: none;
+      background: 
+        radial-gradient(circle at 50% 30%, rgba(13, 15, 20, 0.2) 0%, rgba(13, 15, 20, 0.85) 100%),
+        linear-gradient(180deg, rgba(13,15,20,0.75) 0%, rgba(13,15,20,0.4) 50%, rgba(13,15,20,0.92) 100%);
+    }
+
+    /* Header Navigation */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 60px;
+      background: linear-gradient(180deg, rgba(13,15,20,0.9) 0%, rgba(13,15,20,0) 100%);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-logo {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--text-white);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-item {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    .nav-item:hover {
+      color: var(--text-white);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .mobile-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 26px;
+      height: 18px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 101;
+      padding: 0;
+    }
+
+    .mobile-toggle span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background-color: var(--text-white);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-toggle.active span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    .mobile-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .mobile-toggle.active span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .mobile-only-talk {
+      display: none;
+    }
+
+    .btn-talk {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 30px;
+      background: #ffffff;
+      color: #0d0f14;
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-talk:hover {
+      background: rgba(255, 255, 255, 0.85);
+      transform: translateY(-2px);
+    }
+
+    /* Content Layout Wrapper */
+    .content-wrapper {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* Sections */
+    section {
+      padding: 120px 0;
+      position: relative;
+    }
+
+    /* Section Category Tag */
+    .section-category {
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-category-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .section-category-link:hover {
+      color: var(--text-white);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 140px;
+      padding-bottom: 60px;
+    }
+
+    .hero-tagline {
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-tagline::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+
+    .hero-name-title {
+      font-family: var(--font-display);
+      font-size: clamp(34px, 8.5vw, 140px);
+      font-weight: 400;
+      line-height: 0.92;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 8px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    .hero-role-title {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 5vw, 76px);
+      font-weight: 400;
+      line-height: 0.95;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 24px;
+    }
+
+    .hero-contact-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 28px;
+      max-width: 780px;
+    }
+
+    .hero-btn-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 30px;
+      color: var(--text-white);
+      font-size: 13.5px;
+      font-weight: 500;
+      text-decoration: none;
+      backdrop-filter: blur(16px);
+      transition: all 0.3s ease;
+    }
+
+    .hero-btn-pill:hover:not(.static-pill) {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      max-width: 580px;
+      margin-bottom: 40px;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #0d0f14;
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-white:hover {
+      background: rgba(255, 255, 255, 0.88);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-white);
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* General Dark Slate Container Card */
+    .av-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 32px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: all 0.35s ease;
+    }
+
+    .av-card:hover {
+      background: var(--card-bg-hover);
+      border-color: var(--card-border-hover);
+      transform: translateY(-4px);
+    }
+
+    /* Stats Counter Bar (4 Columns) */
+    .stats-bar-card {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 36px 0;
+      margin-top: 60px;
+    }
+
+    .stat-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+      position: relative;
+    }
+
+    .stat-col:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 15%;
+      height: 70%;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .stat-icon {
+      font-size: 18px;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+
+    .stat-number {
+      font-family: var(--font-heading);
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--text-white);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-family: var(--font-heading);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* Featured Work Cards (2 Grid) */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+      gap: 28px;
+    }
+
+    .project-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 280px;
+      text-align: left;
+    }
+
+    .card-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .card-tag-text {
+      font-family: var(--font-heading);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-align: left;
+    }
+
+    .project-title {
+      font-family: var(--font-heading);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 12px;
+      text-align: left;
+      line-height: 1.25;
+    }
+
+    .project-desc-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .project-desc-list li {
+      position: relative;
+      padding-left: 18px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .project-desc-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 1px;
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
+    /* Capabilities & Tools Split Section */
+    .capabilities-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .capabilities-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .capability-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .cap-icon {
+      font-size: 20px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    .cap-title {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-white);
+      margin-bottom: 4px;
+    }
+
+    .cap-desc {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+
+    /* Tools Grid Card */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .tool-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .tool-icon-lbl {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+
+    .tool-sub-lbl {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* Education List Cards */
+    .edu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .edu-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .edu-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-white);
+
+    }
+
+    .edu-inst-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .edu-badge-tag {
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-white);
+    }
+
+    /* Large Editorial Contact Footer Box */
+    .contact-banner-card {
+      background: linear-gradient(135deg, rgba(30, 36, 48, 0.9) 0%, rgba(18, 22, 30, 0.95) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      padding: 60px 48px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .banner-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 5.5vw, 76px);
+      font-weight: 400;
+      line-height: 0.98;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-white);
+      margin-bottom: 20px;
+    }
+
+    .banner-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 32px;
+      max-width: 480px;
+    }
+
+    .contact-details-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-detail-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-muted);
+      font-size: 14px;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .contact-detail-row:hover {
+      color: var(--text-white);
+    }
+
+    .detail-icon {
+      color: var(--text-dim);
+      font-size: 16px;
+    }
+
+    /* Preloader */
+    .loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #0d0f14;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-bar-bg {
+      width: 200px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.15);
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .loader-bar {
+      width: 0%;
+      height: 100%;
+      background: #ffffff;
+      transition: width 0.15s ease-out;
+    }
+
+    .loader-text {
+      font-family: var(--font-heading);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    @media (max-width: 900px) {
+      header {
+        padding: 18px 24px;
+      }
+
+      .mobile-toggle {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 320px;
+        height: 100vh;
+        background: rgba(13, 15, 20, 0.96);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 28px;
+        transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 99;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .nav-links.active {
+        right: 0;
+      }
+
+      .nav-item {
+        font-size: 15px;
+        letter-spacing: 2px;
+      }
+
+      .mobile-only-talk {
+        display: inline-flex;
+      }
+
+      .stats-bar-card {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px 16px;
+        padding: 28px 16px;
+      }
+
+      .stat-col::after {
+        display: none;
+      }
+
+      .capabilities-split {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-banner-card {
+        grid-template-columns: 1fr;
+        padding: 40px 24px;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .header-right .btn-talk {
+        display: none;
+      }
+
+      .content-wrapper {
+        padding: 0 16px;
+      }
+
+      section {
+        padding: 70px 0;
+      }
+
+      .hero-section {
+        padding-top: 110px;
+        padding-bottom: 40px;
+      }
+
+      .hero-desc {
+        font-size: 15.5px;
+        margin-bottom: 28px;
+      }
+
+      .hero-cta-row {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+      }
+
+      .hero-cta-row .btn-white,
+      .hero-cta-row .btn-outline {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .av-card {
+        padding: 24px 18px;
+        border-radius: 16px;
+      }
+
+      .tools-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .edu-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .contact-banner-card {
+        padding: 28px 18px;
+        border-radius: 18px;
+      }
+
+      .contact-detail-row {
+        word-break: break-all;
+        overflow-wrap: anywhere;
+        font-size: 13.5px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .brand-logo {
+        font-size: 22px;
+      }
+
+      .btn-talk {
+        padding: 8px 14px;
+        font-size: 11px;
+      }
+
+      .stats-bar-card {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 20px 10px;
+        gap: 16px 8px;
+      }
+
+      .stat-number {
+        font-size: 26px;
+      }
+
+      .stat-label {
+        font-size: 9.5px;
+        letter-spacing: 1px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div class="loader" id="loader">
+    <div class="loader-text" id="loaderText">Loading 0%</div>
+    <div class="loader-bar-bg">
+      <div class="loader-bar" id="loaderBar"></div>
+    </div>
+  </div>
+
+  <!-- Background Canvas -->
+  <canvas id="canvas"></canvas>
+  <div class="bg-overlay"></div>
+
+  <!-- Header Navigation -->
+  <header>
+    <a href="#" class="brand-logo">FM</a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="#hero" class="nav-item">Home</a>
+      <a href="#work" class="nav-item">Work</a>
+      <a href="#capabilities" class="nav-item">Capabilities</a>
+      <a href="#about" class="nav-item">About</a>
+      <a href="#education" class="nav-item">Education</a>
+      <a href="#contact" class="nav-item">Contact</a>
+      <a href="#contact" class="btn-talk mobile-only-talk" style="margin-top: 10px;">Let's Talk ↗</a>
+    </div>
+
+    <div class="header-right">
+      <a href="#contact" class="btn-talk">Let's Talk ↗</a>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <div class="content-wrapper">
+
+    <!-- HERO SECTION -->
+    <section class="hero-section" id="hero">
+      <h1 class="hero-name-title">FARRUKH MUMTAZ</h1>
+      <div class="hero-role-title">AI DEVELOPER</div>
+
+      <div class="hero-cta-row">
+        <a href="#work" class="btn-white">View My Work ↗</a>
+        <a href="./Farrukh_Mumtaz_Resume.pdf" download="Farrukh_Mumtaz_Resume.pdf" class="btn-outline">Download Resume ⤓</a>
+      </div>
+
+      <!-- STATS BAR CARD -->
+      <div class="av-card stats-bar-card">
+        <div class="stat-col">
+          <span class="stat-icon">🎓</span>
+          <span class="stat-number">3.50</span>
+          <span class="stat-label">CGPA @ KFUEIT</span>
+        </div>
+
+        <div class="stat-col">
+          <span class="stat-icon">👥</span>
+          <span class="stat-number">2025</span>
+          <span class="stat-label">Aixon AI Internship</span>
+        </div>
+
+        <div class="stat-col">
+          <span class="stat-icon">🏆</span>
+          <span class="stat-number">1st</span>
+          <span class="stat-label">Dean's Honor Award</span>
+        </div>
+
+        <div class="stat-col">
+          <span class="stat-icon">🌐</span>
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Production AI Pipelines</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED WORK SECTION -->
+    <section id="work">
+      <div class="section-category">
+        <span>Experience & Projects</span>
+        <a href="#work" class="section-category-link">11 AI Systems & Roles ➔</a>
+      </div>
+
+      <div class="projects-grid">
+        <!-- Experience 1: SMJSols (Current) -->
+        <div class="av-card project-card highlight-card" style="border-color: rgba(255, 255, 255, 0.25);">
+          <div class="card-top-row">
+            <span class="card-tag-text" style="color: #ffffff; background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 12px;">Present Role • Current</span>
+          </div>
+          <div>
+            <h3 class="project-title">AI Developer</h3>
+            <p style="font-size: 13.5px; color: var(--text-dim); margin-bottom: 14px; text-align: left;">SMJSols (Present)</p>
+            <ul class="project-desc-list">
+              <li>Developing production-grade artificial intelligence models and machine learning pipelines.</li>
+              <li>Building computer vision and intelligent automation solutions for enterprise clients.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Experience 2: Aixon Internship -->
+        <div class="av-card project-card">
+          <div class="card-top-row">
+            <span class="card-tag-text">Industry Internship • 2025</span>
+          </div>
+          <div>
+            <h3 class="project-title">AI Developer Intern</h3>
+            <p style="font-size: 13.5px; color: var(--text-dim); margin-bottom: 14px; text-align: left;">Aixon • Onsite</p>
+            <ul class="project-desc-list">
+              <li>Developed real-time object detection systems using YOLO and OpenCV.</li>
+              <li>Fine-tuned and benchmarked Vision-Language Models (VLLMs) for production.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Project 1: AI Employee Suite -->
+        <div class="av-card project-card">
+          <div class="card-top-row">
+            <span class="card-tag-text">Enterprise AI • Autonomous Agents</span>
+          </div>
+          <div>
+            <h3 class="project-title">AI Employee Suite</h3>
+            <ul class="project-desc-list">
+              <li>Autonomous multi-agent workforce suite for enterprise task delegation, document processing, and workflow automation.</li>
+              <li>Integrates LLM-powered cognitive agents with real-time analytics and reporting protocols.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Project 2: FYP AI Twin -->
+        <div class="av-card project-card">
+          <div class="card-top-row">
+            <span class="card-tag-text">Generative AI • Speech & NLP</span>
+          </div>
+          <div>
+            <h3 class="project-title">AI Twin System</h3>
+            <ul class="project-desc-list">
+              <li>Built a voice cloning & conversational mimicry system using fine-tuned Transformers and RAG architecture.</li>
+              <li>Integrated speech synthesis with an end-to-end NLP pipeline for personalized responses.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Project 3: WhatsApp Bot for Businesses -->
+        <div class="av-card project-card">
+          <div class="card-top-row">
+            <span class="card-tag-text">Conversational AI • NLP & APIs</span>
+          </div>
+          <div>
+            <h3 class="project-title">WhatsApp Bot for Businesses</h3>
+            <ul class="project-desc-list">
+              <li>Automated business customer support and order management chatbot integrated with WhatsApp API.</li>
+              <li>Utilizes NLP intent recognition for instant automated query handling and CRM syncing.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Project 4: Android Security App -->
+        <div class="av-card project-card">
+          <div class="card-top-row">
+            <span class="card-tag-text">Mobile Security • Android AI</span>
+          </div>
+          <div>
+            <h3 class="project-title">Android Security App</h3>
+            <ul class="project-desc-list">
+              <li>Real-time mobile security scanner and malware behavior analyzer for Android devices.</li>
+              <li>Monitors system permissions, detects suspicious app activities, and enforces privacy safeguards.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Project 5: AI Resume Analyzer -->
+        <div class="av-card project-card">
+          <div class="card-top-row">
+            <span class="card-tag-text">NLP • LLMs & Parsing</span>
+          </div>
+          <div>
+            <h3 class="project-title">AI Resume Analyzer</h3>
+            <ul class="project-desc-list">
+              <li>Automated resume parsing and job matching using NLP embeddings and LLMs.</li>
+              <li>Generates candidate match scores and actionable skill gap recommendations.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Project 6: AI Emotion Detector -->
+        <div class="av-card project-card">
+          <div class="card-top-row">
+            <span class="card-tag-text">Computer Vision • CNNs</span>
+          </div>
+          <div>
+            <h3 class="project-title">AI Emotion Detector</h3>
+            <ul class="project-desc-list">
+              <li>Real-time facial expression and emotion recognition system using deep CNNs and OpenCV.</li>
+              <li>Accurately classifies facial micro-expressions into 7 core emotion states.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Project 7: AI Inventory Management -->
+        <div class="av-card project-card">
+          <div class="card-top-row">
+            <span class="card-tag-text">Predictive Analytics • ML</span>
+          </div>
+          <div>
+            <h3 class="project-title">AI Inventory Management</h3>
+            <ul class="project-desc-list">
+              <li>Smart demand forecasting and automated replenishment using time-series ML models.</li>
+              <li>Optimizes warehouse inventory levels and minimizes stockout occurrences.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Project 8: Stock Recommender System -->
+        <div class="av-card project-card">
+          <div class="card-top-row">
+            <span class="card-tag-text">Time-Series • Financial ML</span>
+          </div>
+          <div>
+            <h3 class="project-title">Stock Recommender System</h3>
+            <ul class="project-desc-list">
+              <li>Predictive market analyzer leveraging historical financial data and LSTM neural networks.</li>
+              <li>Delivers automated buy/sell signals and risk-adjusted portfolio recommendations.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Project 9: Parking Booking System -->
+        <div class="av-card project-card">
+          <div class="card-top-row">
+            <span class="card-tag-text">Smart City • Vision & Web</span>
+          </div>
+          <div>
+            <h3 class="project-title">Parking Booking System</h3>
+            <ul class="project-desc-list">
+              <li>Automated slot reservation platform integrated with real-time camera occupancy tracking.</li>
+              <li>Provides driver navigation, instant slot booking, and automated entry management.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Project 10: Fire Detector & Alarm System -->
+        <div class="av-card project-card">
+          <div class="card-top-row">
+            <span class="card-tag-text">Computer Vision • Safety AI</span>
+          </div>
+          <div>
+            <h3 class="project-title">Fire Detector & Alarm System</h3>
+            <ul class="project-desc-list">
+              <li>Real-time computer vision system for early flame and smoke detection from surveillance feeds.</li>
+              <li>Triggers instant emergency alert notifications and automated alarm protocols.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CAPABILITIES & TOOLS SECTION -->
+    <section id="capabilities">
+      <div class="capabilities-split">
+        <!-- Left: Core Capabilities -->
+        <div>
+          <div class="section-category">Core Capabilities</div>
+          
+          <div class="capabilities-list">
+            <div class="capability-item">
+              <span class="cap-icon">•</span>
+              <div>
+                <h4 class="cap-title">Machine Learning & Deep Learning</h4>
+                <p class="cap-desc">Supervised & unsupervised algorithms, CNN architectures, and Transformer models.</p>
+              </div>
+            </div>
+
+            <div class="capability-item">
+              <span class="cap-icon">•</span>
+              <div>
+                <h4 class="cap-title">Computer Vision & VLLMs</h4>
+                <p class="cap-desc">YOLO real-time object detection, image classification, OpenCV, and vision-language models.</p>
+              </div>
+            </div>
+
+            <div class="capability-item">
+              <span class="cap-icon">•</span>
+              <div>
+                <h4 class="cap-title">Generative AI & RAG</h4>
+                <p class="cap-desc">Large Language Models (LLMs), Retrieval-Augmented Generation, voice cloning, and prompt engineering.</p>
+              </div>
+            </div>
+
+            <div class="capability-item">
+              <span class="cap-icon">•</span>
+              <div>
+                <h4 class="cap-title">API & Deployment</h4>
+                <p class="cap-desc">FastAPI model wrapping, RESTful microservices, and inference optimization.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Tools & Technologies -->
+        <div>
+          <div class="section-category">Tools & Technologies</div>
+          
+          <div class="av-card">
+            <div class="tools-grid">
+              <div class="tool-box">
+                <span style="font-weight: bold; color: var(--text-white);">Py</span>
+                <div>
+                  <div class="tool-icon-lbl">PyTorch</div>
+                  <div class="tool-sub-lbl">Deep Learning</div>
+                </div>
+              </div>
+
+              <div class="tool-box">
+                <span style="font-weight: bold; color: var(--text-white);">TF</span>
+                <div>
+                  <div class="tool-icon-lbl">TensorFlow</div>
+                  <div class="tool-sub-lbl">ML Framework</div>
+                </div>
+              </div>
+
+              <div class="tool-box">
+                <span style="font-weight: bold; color: var(--text-white);">HF</span>
+                <div>
+                  <div class="tool-icon-lbl">Hugging Face</div>
+                  <div class="tool-sub-lbl">Transformers & Models</div>
+                </div>
+              </div>
+
+              <div class="tool-box">
+                <span style="font-weight: bold; color: var(--text-white);">YO</span>
+                <div>
+                  <div class="tool-icon-lbl">YOLO</div>
+                  <div class="tool-sub-lbl">Object Detection</div>
+                </div>
+              </div>
+
+              <div class="tool-box">
+                <span style="font-weight: bold; color: var(--text-white);">CV</span>
+                <div>
+                  <div class="tool-icon-lbl">OpenCV</div>
+                  <div class="tool-sub-lbl">Computer Vision</div>
+                </div>
+              </div>
+
+              <div class="tool-box">
+                <span style="font-weight: bold; color: var(--text-white);">FA</span>
+                <div>
+                  <div class="tool-icon-lbl">FastAPI</div>
+                  <div class="tool-sub-lbl">REST Services</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about">
+      <div class="section-category">About Farrukh</div>
+
+      <div class="av-card" style="padding: 48px;">
+        <h2 style="font-family: var(--font-heading); font-size: 32px; font-weight: 700; margin-bottom: 20px;">
+          Building Intelligent Systems That Solve Real-World Problems
+        </h2>
+        <p style="font-size: 16.5px; line-height: 1.75; color: var(--text-white); max-width: 880px; margin-bottom: 16px;">
+          Hi, I’m <strong>Farrukh Mumtaz</strong>, a graduate in BS Artificial Intelligence with a 3.5/4.0 CGPA and a passion for building intelligent systems that solve real-world problems.
+        </p>
+        <p style="font-size: 15.5px; line-height: 1.75; color: var(--text-muted); max-width: 880px; margin-bottom: 28px;">
+          My interest in AI started with curiosity about how machines can learn, reason, and create. Over time, that curiosity turned into hands-on experience in Machine Learning, Deep Learning, Natural Language Processing, and Computer Vision.
+        </p>
+        <div style="display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); font-size: 13px; font-weight: 600; color: var(--text-white);">
+          <span>🏆</span> Dean's Honor Award for Academic Excellence
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION SECTION -->
+    <section id="education">
+      <div class="section-category">Certifications & Education</div>
+
+      <div class="av-card">
+        <div class="edu-list">
+          <div class="edu-row">
+            <div>
+              <div class="edu-title">Bachelor of Science in Artificial Intelligence</div>
+              <div class="edu-inst-text">Khawaja Fareed University of Engineering & IT • Rahim Yar Khan (2022 – 2026)</div>
+            </div>
+            <div class="edu-badge-tag">CGPA 3.50 / 4.0</div>
+          </div>
+
+          <hr style="border: 0; height: 1px; background: rgba(255,255,255,0.06); margin: 12px 0;">
+
+          <div class="edu-row">
+            <div>
+              <div class="edu-title">FSc Pre-Medical</div>
+              <div class="edu-inst-text">Punjab Group of College • Sadiqabad (2019 – 2021)</div>
+            </div>
+            <div class="edu-badge-tag">917 / 1100 Marks</div>
+          </div>
+
+          <hr style="border: 0; height: 1px; background: rgba(255,255,255,0.06); margin: 12px 0;">
+
+          <div class="edu-row">
+            <div>
+              <div class="edu-title">Matriculation</div>
+              <div class="edu-inst-text">Govt Secondary School Kotla Hiyat (2017 – 2019)</div>
+            </div>
+            <div class="edu-badge-tag">998 / 1100 Marks</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT BANNER SECTION -->
+    <section id="contact">
+      <div class="contact-banner-card">
+        <div>
+          <h2 class="banner-title">
+            LET'S CREATE<br>
+            SOMETHING<br>
+            EXTRAORDINARY
+          </h2>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 32px;">
+            <a href="mailto:farrukhmumtaz.ai@gmail.com" class="btn-white">Let's Work Together ↗</a>
+            <a href="./Farrukh_Mumtaz_Resume.pdf" download="Farrukh_Mumtaz_Resume.pdf" class="btn-outline" style="border-color: rgba(255,255,255,0.4);">Download Resume ⤓</a>
+          </div>
+        </div>
+
+        <div class="contact-details-list">
+          <a href="mailto:farrukhmumtaz.ai@gmail.com" class="contact-detail-row">
+            <span class="detail-icon">✉</span>
+            farrukhmumtaz.ai@gmail.com
+          </a>
+          <a href="tel:+923288271853" class="contact-detail-row">
+            <span class="detail-icon">📞</span>
+            +92 328 8271853
+          </a>
+          <div class="contact-detail-row">
+            <span class="detail-icon">📍</span>
+            Rahim Yar Khan, Punjab, Pakistan
+          </div>
+          <a href="https://linkedin.com/in/farrukh-ai-developer" target="_blank" class="contact-detail-row">
+            <span class="detail-icon">in</span>
+            linkedin.com/in/farrukh-ai-developer
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // Mobile Drawer Navigation Toggle
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    if (mobileToggle && navLinks) {
+      mobileToggle.addEventListener('click', () => {
+        mobileToggle.classList.toggle('active');
+        navLinks.classList.toggle('active');
+      });
+
+      document.querySelectorAll('.nav-item').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileToggle.classList.remove('active');
+          navLinks.classList.remove('active');
+        });
+      });
+    }
+
+    const frameCount = 175;
+    const folderName = 'ezgif-101401698637963e-jpg';
+    
+    const getFrameUrl = index => (
+      `./${folderName}/ezgif-frame-${index.toString().padStart(3, '0')}.jpg`
+    );
+
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d', { alpha: false });
+    const loader = document.getElementById('loader');
+    const loaderText = document.getElementById('loaderText');
+    const loaderBar = document.getElementById('loaderBar');
+
+    const bitmaps = new Array(frameCount);
+    let loadedCount = 0;
+    let currentFrameIndex = -1;
+    let isHydrated = false;
+
+    // High DPI Canvas resize handler (Clamped to DPR max 2 for memory efficiency)
+    function resizeCanvas() {
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.width = Math.floor(window.innerWidth * dpr);
+      canvas.height = Math.floor(window.innerHeight * dpr);
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      
+      if (currentFrameIndex >= 0) {
+        renderFrame(currentFrameIndex);
+      }
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Render single frame onto canvas with cover scaling
+    function renderFrame(index) {
+      const bitmap = bitmaps[index];
+      if (!bitmap) return;
+
+      const cw = canvas.width;
+      const ch = canvas.height;
+      const bw = bitmap.width;
+      const bh = bitmap.height;
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'medium';
+
+      const imgAspect = bw / bh;
+      const canvasAspect = cw / ch;
+
+      let drawW, drawH, x, y;
+
+      if (canvasAspect > imgAspect) {
+        drawW = cw;
+        drawH = cw / imgAspect;
+        x = 0;
+        y = (ch - drawH) / 2;
+      } else {
+        drawH = ch;
+        drawW = ch * imgAspect;
+        x = (cw - drawW) / 2;
+        y = 0;
+      }
+
+      ctx.drawImage(bitmap, x, y, drawW, drawH);
+      currentFrameIndex = index;
+    }
+
+    // Preload & decode images using controlled queue concurrency (6 parallel workers)
+    async function preloadAllBitmaps() {
+      const BATCH_SIZE = 6;
+      let nextFrameIndex = 1;
+
+      async function worker() {
+        while (nextFrameIndex <= frameCount) {
+          const index = nextFrameIndex++;
+          try {
+            const img = new Image();
+            img.src = getFrameUrl(index);
+            await img.decode();
+            const bitmap = await createImageBitmap(img);
+            bitmaps[index - 1] = bitmap;
+          } catch (e) {
+            console.error(`Failed loading frame ${index}`, e);
+          } finally {
+            loadedCount++;
+            const progress = Math.floor((loadedCount / frameCount) * 100);
+            loaderText.textContent = `Loading ${progress}%`;
+            loaderBar.style.width = `${progress}%`;
+
+            if (index === 1 && bitmaps[0]) {
+              renderFrame(0);
+            }
+
+            // Reveal UI & enable interaction early once 20% keyframes are ready
+            if (loadedCount >= 35 && !isHydrated) {
+              triggerEarlyReady();
+            }
+          }
+        }
+      }
+
+      const workers = [];
+      for (let w = 0; w < BATCH_SIZE; w++) {
+        workers.push(worker());
+      }
+
+      await Promise.all(workers);
+      onComplete();
+    }
+
+    function triggerEarlyReady() {
+      if (isHydrated) return;
+      isHydrated = true;
+      loader.classList.add('hidden');
+      initLenis();
+    }
+
+    function onComplete() {
+      if (!isHydrated) {
+        triggerEarlyReady();
+      }
+    }
+
+    // Initialize Lenis Smooth Scroll with mobile performance optimizations
+    function initLenis() {
+      const isMobile = window.innerWidth <= 768;
+      const lenis = new Lenis({
+        duration: isMobile ? 1.0 : 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        smoothTouch: false
+      });
+
+      function updateProgress(scroll) {
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        if (maxScroll <= 0) return;
+        const progress = Math.max(0, Math.min(1, scroll / maxScroll));
+        const targetFrame = Math.min(frameCount - 1, Math.round(progress * (frameCount - 1)));
+        
+        // Skip redraw if target frame has not changed
+        if (targetFrame !== currentFrameIndex) {
+          renderFrame(targetFrame);
+        }
+      }
+
+      lenis.on('scroll', (e) => {
+        updateProgress(e.scroll);
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+
+      requestAnimationFrame(raf);
+      updateProgress(window.scrollY || 0);
+    }
+
+    preloadAllBitmaps();
+  </script>
+</body>
+</html>
