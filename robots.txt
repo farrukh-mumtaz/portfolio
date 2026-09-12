@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Direct Google directly to your sitemap file
-Sitemap: https://farrukh-mumtaz.github.io/portfolio/sitemap.xml
+Sitemap: https://farrukhmumtaz.site/sitemap.xml
